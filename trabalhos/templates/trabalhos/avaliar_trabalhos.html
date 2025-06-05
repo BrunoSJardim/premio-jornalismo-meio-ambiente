@@ -1,0 +1,42 @@
+{% extends 'trabalhos/base.html' %}
+
+{% block title %}Avaliar Trabalhos{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Lista de Trabalhos para Avaliação</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Título</th>
+            <th>Autores</th>
+            <th>Status</th>
+            <th>Ações</th>
+            <th>Parecer Final</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for trabalho in trabalhos %}
+        <tr>
+            <td>{{ trabalho.titulo }}</td>
+            <td>{{ trabalho.autores }}</td>
+            <td>{{ trabalho.status }}</td>
+            <td>
+                {% if trabalho.id in avaliacoes_ids %}
+                <span class="badge bg-success">Já Avaliado</span>
+                {% else %}
+                <a href="{% url 'avaliar_trabalho' trabalho.id %}" class="btn btn-primary btn-sm">Avaliar</a>
+                {% endif %}
+            </td>
+            <td>
+                {% if trabalho.parecer_final %}
+                {{ trabalho.parecer_final }}
+                {% else %}
+                <span class="text-muted">Pendente</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

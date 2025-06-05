@@ -1,0 +1,105 @@
+{% extends 'trabalhos/base.html' %}
+
+{% block title %}Painel de Pareceres{% endblock %}
+
+{% block content %}
+<div class="container mt-4 mb-5">
+    <h2 class="mb-4">Painel Administrativo - Pareceres Finais</h2>
+
+    <!-- FORMULÁRIO DE FILTROS -->
+
+    <form method="get" class="row g-3 mb-4">
+
+        <!-- Campo de busca (título ou nome completo) -->
+
+        <div class="col-md-4">
+            <input type="text" name="busca" class="form-control" placeholder="Buscar título ou nome completo"
+                value="{{ busca_atual }}">
+        </div>
+
+        <!-- Filtro de Status -->
+
+        <div class="col-md-3">
+            <select name="status" class="form-select">
+                <option value="">Todos os status</option>
+                <option value="submetido" {% if status_atual == "submetido" %}selected{% endif %}>
+                    Submetido
+                </option>
+                <option value="avaliado" {% if status_atual == "avaliado" %}selected{% endif %}>
+                    Avaliado
+                </option>
+            </select>
+        </div>
+
+        <!-- Filtro de Parecer Final -->
+
+        <div class="col-md-3">
+            <select name="parecer" class="form-select">
+                <option value="">Todos os pareceres</option>
+                <option value="Aceito" {% if parecer_atual == "Aceito" %}selected{% endif %}>Aceito</option>
+                <option value="Rejeitado" {% if parecer_atual == "Rejeitado" %}selected{% endif %}>Rejeitado</option>
+                <option value="Revisão necessária" {% if parecer_atual == "Revisão necessária" %}selected{% endif %}>
+                    Revisão necessária
+                </option>
+            </select>
+        </div>
+
+        <!-- Botão Filtrar -->
+
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-success w-100">Filtrar</button>
+        </div>
+    </form>
+
+    <!-- TABELA DE RESULTADOS -->
+
+    <table class="table table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>Título</th>
+                <th>Nome Completo</th>
+                <th>Categoria</th>
+                <th>Parecer Final</th>
+                <th>Arquivo</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for trabalho in trabalhos %}
+            <tr>
+                <td>{{ trabalho.titulo }}</td>
+                <td>{{ trabalho.nome_completo }}</td>
+                <td>{{ trabalho.categoria|title }}</td>
+
+                <!-- Coluna “Parecer Final” corrigida: usa “first” em vez de loop + break -->
+
+                <td>
+                    {% with primeira_avaliacao=trabalho.avaliacao.all|first %}
+                    {% if primeira_avaliacao %}
+                    {{ primeira_avaliacao.recomendacao }}
+                    {% else %}
+                    <span class="text-muted">Pendente</span>
+                    {% endif %}
+                    {% endwith %}
+                </td>
+
+                <!-- Coluna “Arquivo” (botão para baixar parecer) -->
+
+                <td>
+                    {% if trabalho.avaliacao.exists %}
+                    <a href="{% url 'gerar_parecer_pdf' trabalho.id %}" class="btn btn-outline-success btn-sm">
+                        Baixar Parecer
+                    </a>
+                    {% else %}
+                    <span class="text-muted">Pendente</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" class="text-center">Nenhum trabalho disponível.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

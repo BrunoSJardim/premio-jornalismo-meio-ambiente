@@ -1,0 +1,8 @@
+{% extends 'trabalhos/base.html' %}
+
+{% block content %}
+<div class="alert alert-success mt-4">
+    <h4>Inscrição realizada com sucesso!</h4>
+    <a href="{% url 'enviar_trabalho' %}" class="btn btn-secondary mt-2">Fazer nova inscrição</a>
+</div>
+{% endblock %}

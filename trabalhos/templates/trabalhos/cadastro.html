@@ -1,0 +1,27 @@
+{% extends 'trabalhos/base.html' %}
+
+{% block title %}Cadastro{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Criar Conta</h2>
+
+<form method="post" class="p-4 border rounded bg-light">
+    {% csrf_token %}
+    <div class="mb-3">
+        {{ form.nome.label_tag }} {{ form.nome }}
+    </div>
+    <div class="mb-3">
+        {{ form.email.label_tag }} {{ form.email }}
+    </div>
+    <div class="mb-3">
+        {{ form.tipo.label_tag }} {{ form.tipo }}
+    </div>
+    <div class="mb-3">
+        {{ form.senha.label_tag }} {{ form.senha }}
+    </div>
+    <div class="mb-3">
+        {{ form.confirmar_senha.label_tag }} {{ form.confirmar_senha }}
+    </div>
+    <button type="submit" class="btn btn-success w-100">Criar Conta</button>
+</form>
+{% endblock %}

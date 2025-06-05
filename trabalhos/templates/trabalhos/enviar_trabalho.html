@@ -1,0 +1,87 @@
+<!-- templates/trabalhos/enviar_trabalho.html -->
+
+{% extends 'trabalhos/base.html' %}
+
+{% block title %}Inscrição{% endblock %}
+
+{% block page_header %}
+<div class="page-header">
+    <div class="container">
+        <h1>Fazer inscrição</h1>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    {{ form.non_field_errors }}
+
+    <!-- Campos individuais -->
+
+    <div class="mb-3">{{ form.nome_completo.label_tag }} {{ form.nome_completo }}</div>
+    <div class="mb-3">{{ form.data_nascimento.label_tag }} {{ form.data_nascimento }}</div>
+    <div class="mb-3">{{ form.cpf.label_tag }} {{ form.cpf }}</div>
+    <div class="mb-3">{{ form.email.label_tag }} {{ form.email }}</div>
+    <div class="mb-3">{{ form.telefone.label_tag }} {{ form.telefone }}</div>
+
+    <div class="mb-3">{{ form.banco.label_tag }} {{ form.banco }}</div>
+    <div class="mb-3">{{ form.agencia.label_tag }} {{ form.agencia }}</div>
+    <div class="mb-3">{{ form.conta_corrente.label_tag }} {{ form.conta_corrente }}</div>
+    <div class="mb-3">{{ form.comprovante_bancario.label_tag }} {{ form.comprovante_bancario }}</div>
+
+    <div class="mb-3">{{ form.registro_profissional.label_tag }} {{ form.registro_profissional }}</div>
+    <div class="mb-3">{{ form.veiculo_universidade.label_tag }} {{ form.veiculo_universidade }}</div>
+
+    <div class="mb-3">{{ form.categoria.label_tag }} {{ form.categoria }}</div>
+    <div class="mb-3">{{ form.microtema.label_tag }} {{ form.microtema }}</div>
+    <div class="mb-3">{{ form.titulo.label_tag }} {{ form.titulo }}</div>
+    <div class="mb-3">{{ form.descricao.label_tag }} {{ form.descricao }}</div>
+    <div class="mb-3">{{ form.link_trabalho.label_tag }} {{ form.link_trabalho }}</div>
+    <div class="mb-3">{{ form.arquivo_trabalho.label_tag }} {{ form.arquivo_trabalho }}</div>
+
+    <!-- Termo -->
+
+    <div class="mb-3">
+        <h5>Termo de Consentimento para Tratamento de Dados Pessoais</h5>
+        <div class="border p-3 bg-light" style="max-height: 250px; overflow-y: auto; font-size: 0.95em;">
+            <p>
+                Ao realizar minha inscrição no Prêmio RS de Jornalismo Ambiental 2021 autorizo, expressamente, o Governo
+                do Estado do RS, a Secretaria do Meio Ambiente e Infraestrutura do Estado e a FEPAM, doravante
+                denominadas CONTROLADORAS, que, nos termos dos arts. 7º e 11 da Lei 13.709/2018, tratem os meus dados
+                pessoais para fins de inscrição, realização e divulgação do Concurso, podendo compartilha-los com outros
+                órgãos da administração pública estadual, bem como para o cumprimento de determinações legais ou
+                impostas por órgãos de fiscalização.
+            </p>
+            <p>
+                As CONTROLADORAS se responsabilizam por manter medidas de segurança técnicas e administrativas
+                suficientes a proteger os dados pessoais colhidos, comunicando ao INSCRITO, caso aconteça qualquer
+                incidente de segurança que possa acarretar risco ou dano relevante, conforme o artigo 48 da Lei
+                13.709/2018.
+            </p>
+            <p>
+                Fica permitido às CONTROLADORAS manter e utilizar os dados pessoais do INSCRITO durante toda a
+                realização do certame, para as finalidades descritas neste termo e no seu Regulamento e, ainda, após o
+                término do Concurso para cumprimento da obrigação legal ou imposta por órgãos de fiscalização, nos
+                termos do artigo 16 da Lei 13.709/2018.
+            </p>
+            <p>
+                O INSCRITO fica ciente que a eliminação dos dados pessoais ocorrerá após o término do concurso, salvo os
+                dados pessoais do ganhador, que poderão ser usados por até 5 (cinco) anos.
+            </p>
+        </div>
+    </div>
+
+    <div class="form-check mb-4">
+        {{ form.aceite_termo }}
+        <label class="form-check-label" for="{{ form.aceite_termo.id_for_label }}">
+            {{ form.aceite_termo.label }}
+        </label>
+        {% if form.aceite_termo.errors %}
+        <div class="text-danger">{{ form.aceite_termo.errors }}</div>
+        {% endif %}
+    </div>
+
+    <button type="submit" class="btn btn-primary">Enviar</button>
+    {% endblock %}

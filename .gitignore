@@ -1,0 +1,29 @@
+# -------------------------------------------
+# Arquivos Python
+__pycache__/
+*.py[cod]
+*.so
+
+# Virtualenv
+venv/
+.env/
+env/
+
+# Banco de dados local
+db.sqlite3
+
+# Build / Distribuição
+build/
+dist/
+*.egg-info/
+
+# Arquivos do sistema
+.DS_Store
+*.log
+
+# Coleta de estáticos
+/staticfiles/
+
+# Configurações locais
+*.local_settings.py
+# -------------------------------------------

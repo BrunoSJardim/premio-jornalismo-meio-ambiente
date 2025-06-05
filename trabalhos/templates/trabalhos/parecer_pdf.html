@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .section {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Parecer Final</h1>
+
+    <div class="section">
+        <strong>Título:</strong> {{ trabalho.titulo }}
+    </div>
+
+    <div class="section">
+        <strong>Autores:</strong> {{ trabalho.autores }}
+    </div>
+
+    <div class="section">
+        <strong>Resumo:</strong><br>
+        {{ trabalho.resumo }}
+    </div>
+
+    <div class="section">
+        <strong>Palavras-chave:</strong> {{ trabalho.palavras_chave }}
+    </div>
+
+    <div class="section">
+        <strong>Parecer Final:</strong>
+        {% if trabalho.parecer_final %}
+        {{ trabalho.parecer_final }}
+        {% else %}
+        Pendente
+        {% endif %}
+    </div>
+</body>
+
+</html>

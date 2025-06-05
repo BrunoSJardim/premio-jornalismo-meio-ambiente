@@ -1,0 +1,43 @@
+{% extends 'trabalhos/base.html' %}
+
+{% block title %}Início{% endblock %}
+
+{% block precontent %}
+<div class="bg-banner-wrapper">
+    <div class="banner-top text-white text-center">
+        <div class="banner-content">
+            <h1 class="fw-bold mb-3">3º Prêmio Sema-Fepam de Jornalismo Ambiental</h1>
+            <p class="mb-4">Construindo juntos um futuro mais forte para o RS.</p>
+            <a href="{% url 'enviar_trabalho' %}" class="btn btn-lg btn-primary">Inscreva-se</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <p class="lead text-center"><strong>A edição de 2025 do Prêmio Sema-Fepam apresenta novidades.</strong></p>
+
+    <p class="text-center">
+        O Rio Grande do Sul vive um momento de reconstrução, adaptada e resiliente. As enchentes de 2024 e as secas
+        consecutivas ensinaram que a natureza é soberana e que medidas imediatas no presente são necessárias para a
+        manutenção da vida.
+    </p>
+
+    <p class="text-center">
+        A Secretaria do Meio Ambiente e Infraestrutura do Estado do Rio Grande do Sul (Sema) e a Fundação Estadual de
+        Proteção Ambiental (Fepam), órgãos ambientais do Governo do Estado, acreditam que reconstruir um Rio Grande do
+        Sul mais forte para os gaúchos exige a união de todos.
+    </p>
+
+    <p class="text-center">
+        Um dos pilares para a reconstrução de um novo Rio Grande tem como base a educação ambiental e o conhecimento. A
+        imprensa tradicional está inserida no processo, informando a população com apuração e imparcialidade.
+    </p>
+
+    <p class="text-center">
+        Dessa forma, o Prêmio Sema-Fepam de Jornalismo Ambiental chega à terceira edição em 2025 com o tema Construindo
+        juntos um futuro mais forte para o RS.
+    </p>
+</div>
+{% endblock %}

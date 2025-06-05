@@ -1,0 +1,13 @@
+{% extends 'trabalhos/base.html' %}
+
+{% block title %}Avaliar Trabalho{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Avaliar Trabalho: {{ trabalho.titulo }}</h2>
+
+<form method="post" class="p-4 border rounded bg-light">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success mt-2">Salvar Avaliação</button>
+</form>
+{% endblock %}

@@ -1,0 +1,5 @@
+Aspas duplas - ("")
+
+Aspas simples - ('')
+
+Porcentagem - (%)
