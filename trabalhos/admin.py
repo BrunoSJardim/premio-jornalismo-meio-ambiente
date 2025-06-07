@@ -1,11 +1,11 @@
 from django.contrib import admin
-from django.contrib.auth.admin import BaseUserAdmin
+from django.contrib.auth.admin import UserAdmin
 from .models import Usuario, Trabalho, Avaliacao
 
-class UsuarioAdmin(BaseUserAdmin):
+class UsuarioAdmin(UserAdmin):
     model = Usuario
-    list_display = ('email', 'nome', 'is_staff', 'is_superuser')
-    list_filter = ('is_staff', 'is_superuser', 'is_active')
+    list_display = ('email', 'nome', 'is_staff', 'is_active')
+    list_filter = ('is_staff', 'is_active')
     ordering = ('email',)
     search_fields = ('email', 'nome')
 
@@ -21,8 +21,6 @@ class UsuarioAdmin(BaseUserAdmin):
             'fields': ('email', 'nome', 'password1', 'password2', 'is_staff', 'is_active')}
         ),
     )
-
-admin.site.register(Usuario, UsuarioAdmin)
 
 admin.site.register(Usuario, UsuarioAdmin)
 
