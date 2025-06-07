@@ -2,25 +2,25 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from .models import Usuario, Trabalho, Avaliacao
 
-@admin.register(Usuario)
-class UsuarioAdmin(BaseUserAdmin):
+class UsuarioAdmin(UserAdmin):
     model = Usuario
-    list_display = ('email', 'nome', 'is_staff', 'is_superuser')
-    list_filter = ('is_staff', 'is_superuser')
-    search_fields = ('email', 'nome')
+    list_display = ('email', 'nome', 'is_staff', 'is_active')
+    list_filter = ('is_staff', 'is_active')
     ordering = ('email',)
-
+    search_fields = ('email', 'nome')
     fieldsets = (
-        (None, {'fields': ('email', 'password', 'nome', 'tipo')}),
-        ('Permissões', {'fields': ('is_staff', 'is_superuser', 'is_active', 'groups', 'user_permissions')}),
+        (None, {'fields': ('email', 'nome', 'password')}),
+        ('Permissões', {'fields': ('is_staff', 'is_active', 'is_superuser', 'groups', 'user_permissions')}),
+        ('Datas importantes', {'fields': ('last_login',)}),
     )
-
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'nome', 'password1', 'password2', 'tipo', 'is_staff', 'is_superuser', 'is_active')}
+            'fields': ('email', 'nome', 'password1', 'password2', 'is_staff', 'is_active')}
         ),
     )
+
+admin.site.register(Usuario, UsuarioAdmin)
 
 @admin.register(Trabalho)
 class TrabalhoAdmin(admin.ModelAdmin):
