@@ -27,12 +27,11 @@ class TrabalhoForm(forms.ModelForm):
         }
 
 class CadastroUsuarioForm(forms.ModelForm):
-    senha = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
-    confirmar_senha = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
 
     class Meta:
         model = Usuario
-        fields = ['email', 'nome', 'password1', 'password2']  # REMOVA 'tipo' se ele estiver aqui
+        fields = ['nome', 'email', 'password', 'tipo']
         widgets = {
             'nome': forms.TextInput(attrs={'class': 'form-control'}),
             'email': forms.EmailInput(attrs={'class': 'form-control'}),

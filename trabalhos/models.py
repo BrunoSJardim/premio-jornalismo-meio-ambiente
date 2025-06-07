@@ -18,8 +18,15 @@ class UsuarioManager(BaseUserManager):
         return self.create_user(email, nome, password, **extra_fields)
 
 class Usuario(AbstractBaseUser, PermissionsMixin):
+    TIPOS_USUARIO = [
+        ('admin', 'Administrador'),
+        ('avaliador', 'Avaliador'),
+    ]
+
     email = models.EmailField(unique=True)
     nome = models.CharField(max_length=255)
+    tipo = models.CharField(max_length=20, choices=TIPOS_USUARIO, default='avaliador')
+
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
 
@@ -32,28 +39,19 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
         return self.email
 
 class Trabalho(models.Model):
-
-    # Dados Pessoais
-
-    nome_completo = models.CharField(max_length=255 )
+    nome_completo = models.CharField(max_length=255)
     data_nascimento = models.DateField(null=True, blank=True)
     cpf = models.CharField(max_length=14, null=True, blank=True)
     email = models.EmailField(null=True, blank=True)
     telefone = models.CharField(max_length=20, null=True, blank=True)
-
-    # Dados Bancários
 
     banco = models.CharField(max_length=100, null=True, blank=True)
     agencia = models.CharField(max_length=20, null=True, blank=True)
     conta_corrente = models.CharField(max_length=20, null=True, blank=True)
     comprovante_bancario = models.FileField(upload_to='comprovantes/', null=True, blank=True)
 
-    # Dados Profissionais
-
     registro_profissional = models.FileField(upload_to='comprovantes/', null=True, blank=True)
     veiculo_universidade = models.FileField(upload_to='comprovantes/', null=True, blank=True)
-
-    # Inscrição
 
     CATEGORIAS = [
         ('jornalismo impresso', 'Jornalismo impresso'),
@@ -82,8 +80,6 @@ class Trabalho(models.Model):
     link_trabalho = models.URLField(blank=True, null=True)
     arquivo_trabalho = models.FileField(upload_to='trabalhos/', blank=True, null=True)
 
-    # Termo
-
     aceite_termo = models.BooleanField(default=False)
 
     def __str__(self):
@@ -105,3 +101,4 @@ class Avaliacao(models.Model):
 
     def __str__(self):
         return f"Avaliação de {self.trabalho} por {self.avaliador}"
+
