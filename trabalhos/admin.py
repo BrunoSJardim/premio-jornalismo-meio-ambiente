@@ -1,12 +1,26 @@
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from .models import Usuario, Trabalho, Avaliacao
 
 @admin.register(Usuario)
-
-class UsuarioAdmin(admin.ModelAdmin):
+class UsuarioAdmin(BaseUserAdmin):
+    model = Usuario
     list_display = ('email', 'nome', 'is_staff', 'is_superuser')
-    search_fields = ('e-mail', 'nome')
     list_filter = ('is_staff', 'is_superuser')
+    search_fields = ('email', 'nome')
+    ordering = ('email',)
+
+    fieldsets = (
+        (None, {'fields': ('email', 'password', 'nome', 'tipo')}),
+        ('Permissões', {'fields': ('is_staff', 'is_superuser', 'is_active', 'groups', 'user_permissions')}),
+    )
+
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('email', 'nome', 'password1', 'password2', 'tipo', 'is_staff', 'is_superuser', 'is_active')}
+        ),
+    )
 
 @admin.register(Trabalho)
 class TrabalhoAdmin(admin.ModelAdmin):

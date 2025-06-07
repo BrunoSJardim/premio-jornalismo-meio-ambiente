@@ -9,5 +9,6 @@ urlpatterns = [
 ]
 
 # Se estiver em DEBUG, permite servir MEDIA durante dev:
+
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

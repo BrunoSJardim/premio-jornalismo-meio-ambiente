@@ -45,12 +45,12 @@ class CadastroUsuarioForm(forms.ModelForm):
         confirmar = cleaned_data.get("confirmar_senha")
         if senha and confirmar and senha != confirmar:
             raise forms.ValidationError("As senhas não coincidem.")
-        return cleaned_data
+        return  cleaned_data
 
     def save(self, commit=True):
 
         # sobrescrevendo para pegar a senha e criptografar
-        
+
         user = super().save(commit=False)
         senha = self.cleaned_data.get('senha')
         user.set_password(senha)
