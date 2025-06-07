@@ -9,13 +9,11 @@ User = get_user_model()
 
 email = "brunodossantosjardim@gmail.com"
 senha = "Bj101200"
-nome = "Bruno Jardim"
+nome = "Bruno"
 
-# Deleta usuário anterior com mesmo e-mail (se houver)
-User.objects.filter(email=email).delete()
+if not User.objects.filter(email=email).exists():
+    User.objects.create_superuser(email=email, password=senha, nome=nome)
+    print("Superusuário criado com sucesso.")
+else:
+    print("Superusuário já existe.")
 
-# Cria superusuário com todos os campos obrigatórios
-User.objects.create_superuser(email=email, password=senha, nome=nome)
-
-# Log para confirmar
-print("Superusuário criado com sucesso!")
