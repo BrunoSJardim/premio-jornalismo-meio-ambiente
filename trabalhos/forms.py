@@ -32,7 +32,7 @@ class CadastroUsuarioForm(forms.ModelForm):
 
     class Meta:
         model = Usuario
-        fields = ['nome', 'email', 'tipo']  # sem senha aqui, pois são campos adicionais
+        fields = ['email', 'nome', 'password1', 'password2']  # REMOVA 'tipo' se ele estiver aqui
         widgets = {
             'nome': forms.TextInput(attrs={'class': 'form-control'}),
             'email': forms.EmailInput(attrs={'class': 'form-control'}),
