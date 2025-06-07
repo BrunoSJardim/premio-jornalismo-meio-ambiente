@@ -8,3 +8,5 @@ ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', '127.0.0.1').split()
 DATABASES = {
     'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
 }
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
