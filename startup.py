@@ -8,7 +8,7 @@ django.setup()
 User = get_user_model()
 
 email = "brunodossantosjardim@gmail.com"
-senha = "Bj101020"
+senha = "Bj101200"
 nome = "Bruno"
 
 if not User.objects.filter(email=email).exists():
@@ -16,3 +16,4 @@ if not User.objects.filter(email=email).exists():
     print("Superusuário criado com sucesso.")
 else:
     print("Superusuário já existe.")
+
