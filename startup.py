@@ -11,7 +11,7 @@ email = "brunodossantosjardim@gmail.com"
 senha = "Bj101200"
 nome = "Bruno"
 
-print("Ambiente configurado.")
+print("Ambiente configurado. ")
 
 # user, created = User.objects.get_or_create(email=email, defaults={'nome': nome})
 #i f created:

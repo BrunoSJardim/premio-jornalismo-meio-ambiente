@@ -83,7 +83,7 @@ class Trabalho(models.Model):
     aceite_termo = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.titulo
+        return self.titulo or "(Sem título)"
 
 class Avaliacao(models.Model):
     trabalho = models.ForeignKey('trabalhos.Trabalho', on_delete=models.CASCADE)
