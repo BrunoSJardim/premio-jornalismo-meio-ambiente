@@ -26,4 +26,7 @@ dist/
 
 # Configurações locais
 *.local_settings.py
+
+# Env
+*.env
 # -------------------------------------------
