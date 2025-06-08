@@ -5,6 +5,10 @@ class TrabalhoForm(forms.ModelForm):
     class Meta:
         model = Trabalho
         fields = '__all__'
+        labels = {
+            'registro_profissional': 'Registro profissional ou comprovante de matrícula',
+            'veiculo_universidade': 'Veículo de imprensa ou universidade',
+        }
         widgets = {
             'data_nascimento': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
             'descricao': forms.Textarea(attrs={'rows': 4, 'class': 'form-control'}),
