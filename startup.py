@@ -11,15 +11,17 @@ email = "brunodossantosjardim@gmail.com"
 senha = "Bj101200"
 nome = "Bruno"
 
-user, created = User.objects.get_or_create(email=email, defaults={'nome': nome})
-if created:
-    user.set_password(senha)
-    user.is_staff = True
-    user.is_superuser = True
-    user.save()
-    print("Superusuário criado com sucesso.")
-else:
-    user.set_password(senha)
-    user.save()
-    print("Senha do superusuário atualizada com sucesso.")
+print("Ambiente configurado.")
+
+# user, created = User.objects.get_or_create(email=email, defaults={'nome': nome})
+#i f created:
+    # user.set_password(senha)
+    # user.is_staff = True
+    # user.is_superuser = True
+    # user.save()
+    # print("Superusuário criado com sucesso.")
+# else:
+    # user.set_password(senha)
+    # user.save()
+    # print("Senha do superusuário atualizada com sucesso.")
 
