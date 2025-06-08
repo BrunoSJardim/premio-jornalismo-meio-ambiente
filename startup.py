@@ -11,9 +11,15 @@ email = "brunodossantosjardim@gmail.com"
 senha = "Bj101200"
 nome = "Bruno"
 
-if not User.objects.filter(email=email).exists():
-    User.objects.create_superuser(email=email, password=senha, nome=nome)
+user, created = User.objects.get_or_create(email=email, defaults={'nome': nome})
+if created:
+    user.set_password(senha)
+    user.is_staff = True
+    user.is_superuser = True
+    user.save()
     print("Superusuário criado com sucesso.")
 else:
-    print("Superusuário já existe.")
+    user.set_password(senha)
+    user.save()
+    print("Senha do superusuário atualizada com sucesso.")
 
