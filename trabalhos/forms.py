@@ -27,11 +27,12 @@ class TrabalhoForm(forms.ModelForm):
         }
 
 class CadastroUsuarioForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+    senha = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+    confirmar_senha = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
 
     class Meta:
         model = Usuario
-        fields = ['nome', 'email', 'password', 'tipo']
+        fields = ['nome', 'email', 'senha', 'confirmar_senha', 'tipo']
         widgets = {
             'nome': forms.TextInput(attrs={'class': 'form-control'}),
             'email': forms.EmailInput(attrs={'class': 'form-control'}),
@@ -42,18 +43,17 @@ class CadastroUsuarioForm(forms.ModelForm):
         cleaned_data = super().clean()
         senha = cleaned_data.get("senha")
         confirmar = cleaned_data.get("confirmar_senha")
+
         if senha and confirmar and senha != confirmar:
-            raise forms.ValidationError("As senhas não coincidem.")
-        return  cleaned_data
+            self.add_error('confirmar_senha', "As senhas não coincidem.")
+        return cleaned_data
 
     def save(self, commit=True):
-
-        # sobrescrevendo para pegar a senha e criptografar
-
         user = super().save(commit=False)
         senha = self.cleaned_data.get('senha')
         user.set_password(senha)
         if commit:
             user.save()
         return user
+
 
