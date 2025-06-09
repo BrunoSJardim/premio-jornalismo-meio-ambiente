@@ -1,11 +1,11 @@
 from .base import *
-from decouple import config
+import os
 import dj_database_url
 
 DEBUG = False
 
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
-ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', '127.0.0.1').split()
+ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', '127.0.0.1').split(',')
 
 DATABASES = {
     'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
@@ -22,5 +22,7 @@ AWS_STORAGE_BUCKET_NAME = os.getenv("AWS_STORAGE_BUCKET_NAME")
 AWS_S3_REGION_NAME = os.getenv("AWS_S3_REGION_NAME", "us-east-1")
 
 AWS_S3_FILE_OVERWRITE = False
-AWS_DEFAULT_ACL = None
-AWS_QUERYSTRING_AUTH = False  # Gera URLs públicas
+AWS_DEFAULT_ACL = 'public-read'  # ou None se você quiser acesso restrito
+AWS_QUERYSTRING_AUTH = False     # URLs públicas
+
+MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/'
