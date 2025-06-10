@@ -14,7 +14,7 @@ nome = "Bruno"
 print("Ambiente configurado. ")
 
 # user, created = User.objects.get_or_create(email=email, defaults={'nome': nome})
-#if created:
+# if created:
     # user.set_password(senha)
     # user.is_staff = True
     # user.is_superuser = True
