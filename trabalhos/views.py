@@ -7,6 +7,8 @@ from django.contrib import messages
 from django.template.loader import get_template
 from xhtml2pdf import pisa
 from django.http import HttpResponse
+from django.core.files.base import ContentFile
+from django.core.files.storage import default_storage
 import io
 from .forms import TrabalhoForm
 from .models import Trabalho, Avaliacao
@@ -198,6 +200,13 @@ def gerar_parecer_pdf(request, trabalho_id):
     if pisa_status.err:
         return HttpResponse('Erro ao gerar o PDF', status=500)
     return response
+
+def teste_upload(request):
+    nome = 'teste_upload.txt'
+    conteudo = ContentFile(b'Teste direto no S3')
+    caminho = default_storage.save(nome, conteudo)
+    url = default_storage.url(caminho)
+    return HttpResponse(f"Arquivo enviado com sucesso: <a href='{url}' target='_blank'>{url}</a>")
 
 def fazer_logout(request):
     logout(request)

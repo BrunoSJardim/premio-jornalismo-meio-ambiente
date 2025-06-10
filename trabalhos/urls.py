@@ -14,6 +14,7 @@ urlpatterns = [
     path('avaliar/<int:trabalho_id>/', views.avaliar_trabalho, name='avaliar_trabalho'),
     path('painel/', views.painel_admin, name='painel_admin'),
     path('painel/parecer/<int:trabalho_id>/', views.gerar_parecer_pdf, name='gerar_parecer_pdf'),
+    path("teste-upload/", teste_upload),
     path('logout/', views.fazer_logout, name='logout'),
 ]
 
