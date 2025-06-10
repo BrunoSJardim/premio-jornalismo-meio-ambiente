@@ -204,10 +204,13 @@ def gerar_parecer_pdf(request, trabalho_id):
     return response
 
 def teste_upload(request):
-    path = 'teste_upload_final.txt'
-    content = ContentFile(b"Arquivo com ACL publica garantida.")
-    url = salvar_arquivo_com_acl(path, content)
-    return HttpResponse(f"Arquivo enviado com sucesso: <a href='{url}' target='_blank'>{url}</a>")
+    try:
+        path = 'teste_upload_final.txt'
+        content = ContentFile("Arquivo com ACL pública garantida.".encode("utf-8"))
+        url = salvar_arquivo_com_acl(path, content)
+        return HttpResponse(f"Arquivo enviado com sucesso: <a href='{url}' target='_blank'>{url}</a>")
+    except Exception as e:
+        return HttpResponse(f"Erro: {e}", status=500)
 
 def checar_storage(request):
     return HttpResponse(f"DEFAULT_FILE_STORAGE: {settings.DEFAULT_FILE_STORAGE}")
