@@ -9,6 +9,7 @@ from xhtml2pdf import pisa
 from django.conf import settings
 from django.http import HttpResponse
 from django.core.files.base import ContentFile
+from meu_projeto.utils import salvar_arquivo_com_acl
 from django.core.files.storage import default_storage
 import io
 from .forms import TrabalhoForm
@@ -203,10 +204,9 @@ def gerar_parecer_pdf(request, trabalho_id):
     return response
 
 def teste_upload(request):
-    nome = 'teste_upload.txt'
-    conteudo = ContentFile(b'Teste direto no S3')
-    caminho = default_storage.save(nome, conteudo)
-    url = default_storage.url(caminho)
+    path = 'teste_upload_final.txt'
+    content = ContentFile(b"Arquivo com ACL publica garantida.")
+    url = salvar_arquivo_com_acl(path, content)
     return HttpResponse(f"Arquivo enviado com sucesso: <a href='{url}' target='_blank'>{url}</a>")
 
 def checar_storage(request):
