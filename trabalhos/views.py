@@ -6,6 +6,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from django.template.loader import get_template
 from xhtml2pdf import pisa
+from storages.backends.s3boto3 import S3Boto3Storage
 from django.conf import settings
 from django.http import HttpResponse
 from django.core.files.base import ContentFile
@@ -14,7 +15,6 @@ from django.core.files.storage import default_storage
 import io
 from .forms import TrabalhoForm
 from .models import Trabalho, Avaliacao
-from .models import Avaliacao
 from django import forms
 from django.contrib.admin.views.decorators import staff_member_required
 from django.db.models import Q, Count
@@ -202,6 +202,18 @@ def gerar_parecer_pdf(request, trabalho_id):
     if pisa_status.err:
         return HttpResponse('Erro ao gerar o PDF', status=500)
     return response
+
+def salvar_arquivo_com_acl(path, content):
+    storage = S3Boto3Storage()
+    saved_path = storage.save(path, content)
+
+    storage.connection.meta.client.put_object_acl(
+        ACL='public-read',
+        Bucket=storage.bucket_name,
+        Key=storage._normalize_name(storage._clean_name(saved_path)),
+    )
+
+    return storage.url(saved_path)
 
 def teste_upload(request):
     try:
