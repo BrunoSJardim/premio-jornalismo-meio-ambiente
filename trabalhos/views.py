@@ -213,7 +213,9 @@ def teste_upload(request):
         return HttpResponse(f"Erro: {e}", status=500)
 
 def checar_storage(request):
-    return HttpResponse(f"DEFAULT_FILE_STORAGE: {settings.DEFAULT_FILE_STORAGE}")
+    tipo = type(default_storage).__name__
+    caminho = settings.DEFAULT_FILE_STORAGE
+    return HttpResponse(f"Storage em uso: {tipo}<br>DEFAULT_FILE_STORAGE: {caminho}")
 
 def fazer_logout(request):
     logout(request)
