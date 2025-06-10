@@ -1,6 +1,6 @@
 import os
 import django
-import meu_projeto.storages
+import meu_projeto.utils
 from django.contrib.auth import get_user_model
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'meu_projeto.settings.prod')
@@ -12,7 +12,7 @@ email = "brunodossantosjardim@gmail.com"
 senha = "Bj101200"
 nome = "Bruno"
 
-print("storages.py foi importado manualmente")
+print("utils.py foi importado manualmente")
 
 print("Ambiente configurado. ")
 
