@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from django.template.loader import get_template
 from xhtml2pdf import pisa
-from django.conf import prod
+from django.conf import settings
 from django.http import HttpResponse
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
@@ -210,7 +210,7 @@ def teste_upload(request):
     return HttpResponse(f"Arquivo enviado com sucesso: <a href='{url}' target='_blank'>{url}</a>")
 
 def checar_storage(request):
-    return HttpResponse(f"DEFAULT_FILE_STORAGE: {prod.DEFAULT_FILE_STORAGE}")
+    return HttpResponse(f"DEFAULT_FILE_STORAGE: {settings.DEFAULT_FILE_STORAGE}")
 
 def fazer_logout(request):
     logout(request)
