@@ -20,7 +20,7 @@ class UsuarioManager(BaseUserManager):
 
 
 class PublicMediaStorage(S3Boto3Storage):
-    default_acl = None
+    # default_acl = None
     querystring_auth = False
 
 
