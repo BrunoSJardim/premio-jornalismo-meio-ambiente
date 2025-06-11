@@ -92,7 +92,7 @@ class Trabalho(models.Model):
     link_trabalho = models.URLField(blank=True, null=True)
 
     arquivo_trabalho = models.FileField(
-        storage=PublicMediaStorage(), upload_to='trabalhos/', blank=True, null=True
+        arquivo_trabalho = models.FileField(upload_to='trabalhos/', null=True, blank=True)
     )
 
     aceite_termo = models.BooleanField(default=False)
