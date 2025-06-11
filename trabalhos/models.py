@@ -56,13 +56,13 @@ class Trabalho(models.Model):
     conta_corrente = models.CharField(max_length=20, null=True, blank=True)
 
     comprovante_bancario = models.FileField(
-        storage=PublicMediaStorage, upload_to='comprovantes/', null=True, blank=True
+        storage=PublicMediaStorage(), upload_to='comprovantes/', null=True, blank=True
     )
     registro_profissional = models.FileField(
-        storage=PublicMediaStorage, upload_to='comprovantes/', null=True, blank=True
+        storage=PublicMediaStorage(), upload_to='comprovantes/', null=True, blank=True
     )
     veiculo_universidade = models.FileField(
-        storage=PublicMediaStorage, upload_to='comprovantes/', null=True, blank=True
+        storage=PublicMediaStorage(), upload_to='comprovantes/', null=True, blank=True
     )
 
     CATEGORIAS = [
@@ -92,7 +92,7 @@ class Trabalho(models.Model):
     link_trabalho = models.URLField(blank=True, null=True)
 
     arquivo_trabalho = models.FileField(
-        storage=PublicMediaStorage, upload_to='trabalhos/', blank=True, null=True
+        storage=PublicMediaStorage(), upload_to='trabalhos/', blank=True, null=True
     )
 
     aceite_termo = models.BooleanField(default=False)
