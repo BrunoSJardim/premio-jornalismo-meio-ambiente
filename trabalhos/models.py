@@ -19,16 +19,19 @@ class UsuarioManager(BaseUserManager):
         return self.create_user(email, nome, password, **extra_fields)
 
 
+class PublicMediaStorage(S3Boto3Storage):
+    default_acl = 'public-read'
+    querystring_auth = False
+
+
 class Usuario(AbstractBaseUser, PermissionsMixin):
     TIPOS_USUARIO = [
         ('admin', 'Administrador'),
         ('avaliador', 'Avaliador'),
     ]
-
     email = models.EmailField(unique=True)
     nome = models.CharField(max_length=255)
     tipo = models.CharField(max_length=20, choices=TIPOS_USUARIO, default='avaliador')
-
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
 
@@ -41,11 +44,6 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
         return self.email
 
 
-class PublicMediaStorage(S3Boto3Storage):
-    default_acl = 'public-read'
-    querystring_auth = False
-
-
 class Trabalho(models.Model):
     nome_completo = models.CharField(max_length=255)
     data_nascimento = models.DateField(null=True, blank=True)
@@ -56,10 +54,16 @@ class Trabalho(models.Model):
     banco = models.CharField(max_length=100, null=True, blank=True)
     agencia = models.CharField(max_length=20, null=True, blank=True)
     conta_corrente = models.CharField(max_length=20, null=True, blank=True)
-    comprovante_bancario = models.FileField(upload_to='comprovantes/', null=True, blank=True)
 
-    registro_profissional = models.FileField(upload_to='comprovantes/', null=True, blank=True)
-    veiculo_universidade = models.FileField(upload_to='comprovantes/', null=True, blank=True)
+    comprovante_bancario = models.FileField(
+        storage=PublicMediaStorage, upload_to='comprovantes/', null=True, blank=True
+    )
+    registro_profissional = models.FileField(
+        storage=PublicMediaStorage, upload_to='comprovantes/', null=True, blank=True
+    )
+    veiculo_universidade = models.FileField(
+        storage=PublicMediaStorage, upload_to='comprovantes/', null=True, blank=True
+    )
 
     CATEGORIAS = [
         ('jornalismo impresso', 'Jornalismo impresso'),
@@ -86,8 +90,9 @@ class Trabalho(models.Model):
     titulo = models.CharField(max_length=255, null=True, blank=True)
     descricao = models.TextField(null=True, blank=True)
     link_trabalho = models.URLField(blank=True, null=True)
+
     arquivo_trabalho = models.FileField(
-        upload_to='trabalhos/', storage=PublicMediaStorage(), blank=True, null=True
+        storage=PublicMediaStorage, upload_to='trabalhos/', blank=True, null=True
     )
 
     aceite_termo = models.BooleanField(default=False)
@@ -112,3 +117,4 @@ class Avaliacao(models.Model):
 
     def __str__(self):
         return f"Avaliação de {self.trabalho} por {self.avaliador}"
+
