@@ -1,5 +1,5 @@
 from django import forms
-from .models import Trabalho, Usuario
+from .models import Trabalho, Usuario, Avaliacao
 
 class TrabalhoForm(forms.ModelForm):
     class Meta:
@@ -60,4 +60,12 @@ class CadastroUsuarioForm(forms.ModelForm):
             user.save()
         return user
 
-
+class AvaliacaoForm(forms.ModelForm):
+    class Meta:
+        model = Avaliacao
+        fields = ['nota', 'comentario', 'recomendacao']
+        widgets = {
+            'nota': forms.NumberInput(attrs={'class': 'form-control'}),
+            'comentario': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'recomendacao': forms.Select(attrs={'class': 'form-select'}),
+        }
