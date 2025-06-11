@@ -10,6 +10,7 @@ from django.utils.text import slugify
 from django.conf import settings
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
+from django.core.mail import send_mail
 
 from .models import Trabalho, Avaliacao
 from .forms import CadastroUsuarioForm, TrabalhoForm, AvaliacaoForm
@@ -77,15 +78,33 @@ def enviar_trabalho(request):
         form = TrabalhoForm(request.POST, request.FILES)
         if form.is_valid():
             try:
-                form.save()
+                trabalho = form.save()
+
+                # Enviar e-mail de confirmação
+
+                if trabalho.email:
+                    send_mail(
+                        subject='Confirmação de Inscrição - Prêmio SEMA',
+                        message=(
+                            f'Olá {trabalho.nome_completo},\n\n'
+                            'Sua inscrição no Prêmio SEMA foi recebida com sucesso.\n'
+                            'Agradecemos sua participação!'
+                        ),
+                        from_email=None,  # Usa DEFAULT_FROM_EMAIL do settings.py
+                        recipient_list=[trabalho.email],
+                        fail_silently=False,
+                    )
+
                 messages.success(request, "Trabalho enviado com sucesso.")
                 return redirect('home')
+
             except Exception as e:
-                messages.error(request, f"Erro ao salvar: {e}")
+                messages.error(request, f"Erro ao salvar ou enviar e-mail: {e}")
         else:
             messages.error(request, "Formulário inválido.")
     else:
         form = TrabalhoForm()
+    
     return render(request, 'trabalhos/enviar_trabalho.html', {'form': form})
 
 
