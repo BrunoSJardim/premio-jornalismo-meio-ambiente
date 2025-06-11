@@ -72,7 +72,6 @@ def cadastro_usuario(request):
 
 # --- Submissão e avaliação ---
 
-@login_required
 def enviar_trabalho(request):
     if request.method == 'POST':
         form = TrabalhoForm(request.POST, request.FILES)
