@@ -13,7 +13,7 @@ from django.core.files.storage import default_storage
 
 from .models import Trabalho, Avaliacao
 from .forms import CadastroUsuarioForm, TrabalhoForm, AvaliacaoForm
-from meu_projeto.utils import salvar_arquivo_com_acl
+from meu_projeto.utils import salvar_arquivo
 
 import io
 from xhtml2pdf import pisa
@@ -171,7 +171,7 @@ def teste_upload(request):
     try:
         path = 'teste_upload_final.txt'
         content = ContentFile("Arquivo com ACL pública garantida.".encode("utf-8"))
-        url = salvar_arquivo_com_acl(path, content)
+        url = salvar_arquivo(path, content)
         return HttpResponse(f"Arquivo enviado com sucesso: <a href='{url}' target='_blank'>{url}</a>")
     except Exception as e:
         return HttpResponse(f"Erro: {e}", status=500)
