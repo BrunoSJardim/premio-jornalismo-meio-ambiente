@@ -76,9 +76,14 @@ def enviar_trabalho(request):
     if request.method == 'POST':
         form = TrabalhoForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
-            messages.success(request, "Trabalho enviado com sucesso.")
-            return redirect('home')
+            try:
+                form.save()
+                messages.success(request, "Trabalho enviado com sucesso.")
+                return redirect('home')
+            except Exception as e:
+                messages.error(request, f"Erro ao salvar: {e}")
+        else:
+            messages.error(request, "Formulário inválido.")
     else:
         form = TrabalhoForm()
     return render(request, 'trabalhos/enviar_trabalho.html', {'form': form})
