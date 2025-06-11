@@ -56,16 +56,10 @@ class Trabalho(models.Model):
     banco = models.CharField(max_length=100, null=True, blank=True)
     agencia = models.CharField(max_length=20, null=True, blank=True)
     conta_corrente = models.CharField(max_length=20, null=True, blank=True)
+    comprovante_bancario = models.FileField(upload_to='comprovantes/', null=True, blank=True)
 
-    comprovante_bancario = models.FileField(
-        upload_to='comprovantes/', storage=PublicMediaStorage(), null=True, blank=True
-    )
-    registro_profissional = models.FileField(
-        upload_to='comprovantes/', storage=PublicMediaStorage(), null=True, blank=True
-    )
-    veiculo_universidade = models.FileField(
-        upload_to='comprovantes/', storage=PublicMediaStorage(), null=True, blank=True
-    )
+    registro_profissional = models.FileField(upload_to='comprovantes/', null=True, blank=True)
+    veiculo_universidade = models.FileField(upload_to='comprovantes/', null=True, blank=True)
 
     CATEGORIAS = [
         ('jornalismo impresso', 'Jornalismo impresso'),
@@ -93,7 +87,7 @@ class Trabalho(models.Model):
     descricao = models.TextField(null=True, blank=True)
     link_trabalho = models.URLField(blank=True, null=True)
     arquivo_trabalho = models.FileField(
-        upload_to='trabalhos/', storage=PublicMediaStorage(), null=True, blank=True
+        upload_to='trabalhos/', storage=PublicMediaStorage(), blank=True, null=True
     )
 
     aceite_termo = models.BooleanField(default=False)
