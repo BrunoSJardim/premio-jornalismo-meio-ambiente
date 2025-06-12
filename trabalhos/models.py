@@ -54,16 +54,15 @@ class Trabalho(models.Model):
     banco = models.CharField(max_length=100, null=True, blank=True)
     agencia = models.CharField(max_length=20, null=True, blank=True)
     conta_corrente = models.CharField(max_length=20, null=True, blank=True)
+    tipo_chave_pix = models.CharField(max_length=50, blank=True, null=True)
+    chave_pix = models.CharField(max_length=100, blank=True, null=True)
 
     comprovante_bancario = models.FileField(
         storage=PublicMediaStorage(), upload_to='comprovantes/', null=True, blank=True
     )
-    registro_profissional = models.FileField(
-        storage=PublicMediaStorage(), upload_to='comprovantes/', null=True, blank=True
-    )
-    veiculo_universidade = models.FileField(
-        storage=PublicMediaStorage(), upload_to='comprovantes/', null=True, blank=True
-    )
+    registro_profissional = models.CharField(max_length=100, null=True, blank=True)
+
+    veiculo_universidade = models.CharField(max_length=100, null=True, blank=True)
 
     CATEGORIAS = [
         ('jornalismo impresso', 'Jornalismo impresso'),
