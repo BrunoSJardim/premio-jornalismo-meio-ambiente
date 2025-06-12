@@ -83,11 +83,11 @@ def enviar_trabalho(request):
 
                 if trabalho.email:
                     send_mail(
-                        subject='Confirmação de Inscrição - Prêmio SEMA',
+                        subject='Inscrição Confirmada - Prêmio SEMA-FEPAM de Jornalismo Ambiental 2025',
                         message=(
-                            f'Olá {trabalho.nome_completo},\n\n'
-                            'Sua inscrição no Prêmio SEMA foi recebida com sucesso.\n'
-                            'Agradecemos sua participação!'
+                            f'Recebemos sua inscrição com sucesso no Prêmio SEMA-FEPAM de Jornalismo Ambiental 2025.\n\n'
+                            'Atenciosamente,\n'
+                            'Comissão Organizadora\n'
                         ),
                         from_email=None,  # Usa DEFAULT_FROM_EMAIL do settings.py
                         recipient_list=[trabalho.email],
