@@ -30,6 +30,7 @@ class TrabalhoForm(forms.ModelForm):
             'link_trabalho': forms.URLInput(attrs={'class': 'form-control'}),
             'arquivo_trabalho': forms.ClearableFileInput(attrs={'class': 'form-control'}),
             'aceite_termo': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'status': forms.HiddenInput(), # Corrige o erro do campo "status" no formulário
         }
 
 class CadastroUsuarioForm(forms.ModelForm):
