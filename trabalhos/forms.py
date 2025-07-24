@@ -4,7 +4,7 @@ from .models import Trabalho, Usuario, Avaliacao
 class TrabalhoForm(forms.ModelForm):
     class Meta:
         model = Trabalho
-        fields = '__all__'
+        fields = exclude = ['status']
         labels = {
             'registro_profissional': 'Registro profissional ou comprovante de matrícula',
             'veiculo_universidade': 'Veículo de imprensa ou universidade',
