@@ -30,8 +30,12 @@ class TrabalhoForm(forms.ModelForm):
             'link_trabalho': forms.URLInput(attrs={'class': 'form-control'}),
             'arquivo_trabalho': forms.ClearableFileInput(attrs={'class': 'form-control'}),
             'aceite_termo': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
-            'status': forms.HiddenInput(), # Corrige o erro do campo "status" no formulário
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['status'].required = False       # ← evita erro de campo obrigatório
+        self.fields['status'].widget = forms.HiddenInput()  # ← oculta o campo do HTML
 
 class CadastroUsuarioForm(forms.ModelForm):
     senha = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
