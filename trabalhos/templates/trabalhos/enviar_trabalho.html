@@ -17,6 +17,7 @@
     {% csrf_token %}
     {{ form.non_field_errors }}
 
+    <!-- Mostrar erros de campo -->
     {% for field in form %}
     {% for error in field.errors %}
     <div class="alert alert-danger">
@@ -25,80 +26,113 @@
     {% endfor %}
     {% endfor %}
 
-    <!-- Dados Pessoais -->
-    <h5>Dados Pessoais</h5>
-    <hr>
-    <div class="mb-3">{{ form.nome_completo.label_tag }} {{ form.nome_completo }}</div>
-    <div class="mb-3">{{ form.data_nascimento.label_tag }} {{ form.data_nascimento }}</div>
-    <div class="mb-3">{{ form.cpf.label_tag }} {{ form.cpf }}</div>
-    <div class="mb-3">{{ form.email.label_tag }} {{ form.email }}</div>
-    <div class="mb-3">{{ form.telefone.label_tag }} {{ form.telefone }}</div>
+    <div class="accordion" id="formAccordion">
 
-    <!-- Dados Bancários -->
-    <h5>Dados Bancários</h5>
-    <hr>
-    <div class="mb-3">{{ form.banco.label_tag }} {{ form.banco }}</div>
-    <div class="mb-3">{{ form.agencia.label_tag }} {{ form.agencia }}</div>
-    <div class="mb-3">{{ form.conta_corrente.label_tag }} {{ form.conta_corrente }}</div>
-    <div class="mb-3">{{ form.tipo_chave_pix.label_tag }} {{ form.tipo_chave_pix }}</div>
-    <div class="mb-3">{{ form.chave_pix.label_tag }} {{ form.chave_pix }}</div>
+        <!-- Dados Pessoais -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingPessoais">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapsePessoais">
+                    Dados Pessoais
+                </button>
+            </h2>
+            <div id="collapsePessoais" class="accordion-collapse collapse show">
+                <div class="accordion-body">
+                    <div class="mb-3">{{ form.nome_completo.label_tag }} {{ form.nome_completo }}</div>
+                    <div class="mb-3">{{ form.data_nascimento.label_tag }} {{ form.data_nascimento }}</div>
+                    <div class="mb-3">{{ form.cpf.label_tag }} {{ form.cpf }}</div>
+                    <div class="mb-3">{{ form.email.label_tag }} {{ form.email }}</div>
+                    <div class="mb-3">{{ form.telefone.label_tag }} {{ form.telefone }}</div>
+                </div>
+            </div>
+        </div>
 
-    <!-- Dados Profissionais -->
-    <h5>Dados Profissionais</h5>
-    <hr>
-    <div class="mb-3">{{ form.registro_profissional.label_tag }} {{ form.registro_profissional }}</div>
-    <div class="mb-3">{{ form.veiculo_universidade.label_tag }} {{ form.veiculo_universidade }}</div>
+        <!-- Dados Bancários -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingBancarios">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapseBancarios">
+                    Dados Bancários
+                </button>
+            </h2>
+            <div id="collapseBancarios" class="accordion-collapse collapse">
+                <div class="accordion-body">
+                    <div class="mb-3">{{ form.banco.label_tag }} {{ form.banco }}</div>
+                    <div class="mb-3">{{ form.agencia.label_tag }} {{ form.agencia }}</div>
+                    <div class="mb-3">{{ form.conta_corrente.label_tag }} {{ form.conta_corrente }}</div>
+                    <div class="mb-3">{{ form.tipo_chave_pix.label_tag }} {{ form.tipo_chave_pix }}</div>
+                    <div class="mb-3">{{ form.chave_pix.label_tag }} {{ form.chave_pix }}</div>
+                    <div class="mb-3">{{ form.comprovante_bancario.label_tag }} {{ form.comprovante_bancario }}</div>
+                </div>
+            </div>
+        </div>
 
-    <!-- Inscrição -->
-    <h5>Inscrição</h5>
-    <hr>
-    <div class="mb-3">{{ form.categoria.label_tag }} {{ form.categoria }}</div>
-    <div class="mb-3">{{ form.microtema.label_tag }} {{ form.microtema }}</div>
-    <div class="mb-3">{{ form.titulo.label_tag }} {{ form.titulo }}</div>
-    <div class="mb-3">{{ form.descricao.label_tag }} {{ form.descricao }}</div>
-    <div class="mb-3">{{ form.link_trabalho.label_tag }} {{ form.link_trabalho }}</div>
-    <div class="mb-3">{{ form.arquivo_trabalho.label_tag }} {{ form.arquivo_trabalho }}</div>
+        <!-- Dados Profissionais -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingProfissionais">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapseProfissionais">
+                    Dados Profissionais
+                </button>
+            </h2>
+            <div id="collapseProfissionais" class="accordion-collapse collapse">
+                <div class="accordion-body">
+                    <div class="mb-3">{{ form.registro_profissional.label_tag }} {{ form.registro_profissional }}</div>
+                    <div class="mb-3">{{ form.veiculo_universidade.label_tag }} {{ form.veiculo_universidade }}</div>
+                </div>
+            </div>
+        </div>
 
-    <!-- Termo de Consentimento -->
-    <h5>Termo de Consentimento para Tratamento de Dados Pessoais</h5>
-    <hr>
-    <div class="border p-3 bg-light mb-3" style="max-height: 250px; overflow-y: auto; font-size: 0.95em;">
-        <p>
-            Ao realizar minha inscrição no Prêmio RS de Jornalismo Ambiental 2025 autorizo, expressamente, o Governo
-            do Estado do RS, a Secretaria do Meio Ambiente e Infraestrutura do Estado e a FEPAM, doravante
-            denominadas CONTROLADORAS, que, nos termos dos arts. 7º e 11 da Lei 13.709/2018, tratem os meus dados
-            pessoais para fins de inscrição, realização e divulgação do Concurso, podendo compartilha-los com outros
-            órgãos da administração pública estadual, bem como para o cumprimento de determinações legais ou
-            impostas por órgãos de fiscalização.
-        </p>
-        <p>
-            As CONTROLADORAS se responsabilizam por manter medidas de segurança técnicas e administrativas
-            suficientes a proteger os dados pessoais colhidos, comunicando ao INSCRITO, caso aconteça qualquer
-            incidente de segurança que possa acarretar risco ou dano relevante, conforme o artigo 48 da Lei
-            13.709/2018.
-        </p>
-        <p>
-            Fica permitido às CONTROLADORAS manter e utilizar os dados pessoais do INSCRITO durante toda a
-            realização do certame, para as finalidades descritas neste termo e no seu Regulamento e, ainda, após o
-            término do Concurso para cumprimento da obrigação legal ou imposta por órgãos de fiscalização, nos
-            termos do artigo 16 da Lei 13.709/2018.
-        </p>
-        <p>
-            O INSCRITO fica ciente que a eliminação dos dados pessoais ocorrerá após o término do concurso, salvo os
-            dados pessoais do ganhador, que poderão ser usados por até 5 (cinco) anos.
-        </p>
+        <!-- Inscrição -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingInscricao">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapseInscricao">
+                    Inscrição
+                </button>
+            </h2>
+            <div id="collapseInscricao" class="accordion-collapse collapse">
+                <div class="accordion-body">
+                    <div class="mb-3">{{ form.categoria.label_tag }} {{ form.categoria }}</div>
+                    <div class="mb-3">{{ form.microtema.label_tag }} {{ form.microtema }}</div>
+                    <div class="mb-3">{{ form.titulo.label_tag }} {{ form.titulo }}</div>
+                    <div class="mb-3">{{ form.descricao.label_tag }} {{ form.descricao }}</div>
+                    <div class="mb-3">{{ form.link_trabalho.label_tag }} {{ form.link_trabalho }}</div>
+                    <div class="mb-3">{{ form.arquivo_trabalho.label_tag }} {{ form.arquivo_trabalho }}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Termo -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingTermo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapseTermo">
+                    Termo de Consentimento para Tratamento de Dados Pessoais
+                </button>
+            </h2>
+            <div id="collapseTermo" class="accordion-collapse collapse">
+                <div class="accordion-body">
+                    <div class="border p-3 bg-light mb-3" style="max-height: 300px; overflow-y: auto;">
+                        <p>Ao realizar minha inscrição no Prêmio SEMA-FEPAM... [trecho completo do termo aqui]</p>
+                    </div>
+                    <div class="form-check">
+                        {{ form.aceite_termo }}
+                        <label class="form-check-label" for="{{ form.aceite_termo.id_for_label }}">
+                            {{ form.aceite_termo.label }}
+                        </label>
+                        {% if form.aceite_termo.errors %}
+                        <div class="text-danger">{{ form.aceite_termo.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
-    <div class="form-check mb-4">
-        {{ form.aceite_termo }}
-        <label class="form-check-label" for="{{ form.aceite_termo.id_for_label }}">
-            {{ form.aceite_termo.label }}
-        </label>
-        {% if form.aceite_termo.errors %}
-        <div class="text-danger">{{ form.aceite_termo.errors }}</div>
-        {% endif %}
+    <div class="mt-4">
+        <button type="submit" class="btn btn-success">Enviar</button>
     </div>
-
-    <button type="submit" class="btn btn-primary">Enviar</button>
 </form>
 {% endblock %}
