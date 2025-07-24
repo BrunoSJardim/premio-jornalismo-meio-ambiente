@@ -77,7 +77,9 @@ def enviar_trabalho(request):
         form = TrabalhoForm(request.POST, request.FILES)
         if form.is_valid():
             try:
-                trabalho = form.save()
+                trabalho = form.save(commit=False)
+                trabalho.status = 'pendente'  # força o valor padrão
+                trabalho.save()
 
                 # Enviar e-mail de confirmação
 
