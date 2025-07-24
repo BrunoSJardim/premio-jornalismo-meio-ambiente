@@ -26,8 +26,8 @@ admin.site.register(Usuario, UsuarioAdmin)
 
 @admin.register(Trabalho)
 class TrabalhoAdmin(admin.ModelAdmin):
-    list_display = ('nome_completo', 'email', 'categoria')  
-    list_filter = ('categoria',)  
+    list_display = ('nome_completo', 'categoria', 'status', 'email')  
+    list_filter = ('status', 'categoria')  
     search_fields = ('nome_completo', 'email', 'titulo')
 
 @admin.register(Avaliacao)

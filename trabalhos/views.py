@@ -109,7 +109,7 @@ def enviar_trabalho(request):
 
 @login_required
 def avaliar_trabalhos(request):
-    trabalhos = Trabalho.objects.all()
+    trabalhos = Trabalho.objects.filter(status='aceito')
     avaliacoes_ids = Avaliacao.objects.filter(avaliador=request.user).values_list('trabalho_id', flat=True)
     return render(request, 'trabalhos/avaliar_trabalhos.html', {
         'trabalhos': trabalhos,

@@ -96,8 +96,21 @@ class Trabalho(models.Model):
 
     aceite_termo = models.BooleanField(default=False)
 
+    STATUS_ESCOLHAS = [
+        ('pendente', 'Pendente'),
+        ('aceito', 'Aceito'),
+        ('rejeitado', 'Rejeitado'),
+    ]
+
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_ESCOLHAS,
+        default='pendente'
+    )
+
+
     def __str__(self):
-        return self.titulo or "(Sem título)"
+        return self.titulo or "(Sem título)"    
 
 
 class Avaliacao(models.Model):
