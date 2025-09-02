@@ -29,24 +29,6 @@
                 <div class="text-muted small">
                     {{ a.get_tipo_juri_display }} • ID #{{ a.trabalho_id }}
                 </div>
-
-                <!-- Resumo visível na lista -->
-                {% if a.trabalho.descricao %}
-                <div class="small mt-2">
-                    {{ a.trabalho.descricao|truncatechars:180 }}
-                </div>
-                {% endif %}
-
-                <div class="small mt-1">
-                    {% if a.trabalho.link_trabalho %}
-                    <a href="{{ a.trabalho.link_trabalho }}" target="_blank" rel="noopener">Abrir link</a>
-                    {% endif %}
-                    {% if a.trabalho.arquivo_trabalho %}
-                    {% if a.trabalho.link_trabalho %} · {% endif %}
-                    <a href="{{ a.trabalho.arquivo_trabalho.url }}" target="_blank" rel="noopener">Abrir arquivo</a>
-                    {% endif %}
-                </div>
-
             </td>
 
             <td>
