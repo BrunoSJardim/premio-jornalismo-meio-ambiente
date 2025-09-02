@@ -1,0 +1,43 @@
+{% extends "trabalhos/base.html" %}
+{% block title %}Ranking — {{ tipo|title }}{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-3">
+    <h2 class="mb-0">Ranking — {{ tipo|title }}</h2>
+    <div class="btn-group">
+        <a class="btn btn-outline-primary {% if tipo == 'categoria' %}active{% endif %}"
+            href="{% url 'painel_comissao_ranking' %}">Categorias</a>
+        <a class="btn btn-outline-primary {% if tipo == 'microtema' %}active{% endif %}"
+            href="{% url 'painel_comissao_ranking_tipo' 'microtema' %}">Microtemas</a>
+    </div>
+</div>
+
+<table class="table table-bordered align-middle">
+    <thead class="table-light">
+        <tr>
+            <th style="width:55%">Trabalho</th>
+            <th style="width:15%">Média ponderada</th>
+            <th style="width:15%">Pontos totais</th>
+            <th style="width:15%">Pareceres</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for r in ranking %}
+        <tr>
+            <td>{{ r.t_id }}</td>
+            <td><strong>{{ r.media_ponderada|floatformat:2 }}</strong></td>
+            <td>{{ r.pontos_totais }}</td>
+            <td>{{ r.n_pareceres }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4" class="text-center text-muted py-4">Sem avaliações ainda.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<p class="text-muted small mt-3">
+    Ordem: média ponderada (desc) • desempate por pontos totais (desc).
+</p>
+{% endblock %}
