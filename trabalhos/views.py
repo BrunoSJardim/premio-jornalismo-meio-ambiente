@@ -22,6 +22,9 @@ from meu_projeto.utils import salvar_arquivo
 import io
 from xhtml2pdf import pisa
 
+# Fechar inscricoes
+from django.http import HttpResponseForbidden
+
 
 # ==============================
 #  Views públicas e utilitárias
@@ -87,6 +90,12 @@ def cadastro_usuario(request):
 # ==========================
 
 def enviar_trabalho(request):
+
+    # controle simples (troque True/False quando quiser abrir/fechar)
+    INSCRICOES_ABERTAS = False
+    if not INSCRICOES_ABERTAS:
+        return render(request, "trabalhos/inscricoes_encerradas.html")
+
     if request.method == 'POST':
         form = TrabalhoForm(request.POST, request.FILES)
         if form.is_valid():
