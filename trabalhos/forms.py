@@ -1,4 +1,5 @@
 from django import forms
+from .models import Avaliacao, NOTA_CHOICES
 from .models import Trabalho, Usuario, Avaliacao
 
 class TrabalhoForm(forms.ModelForm):
@@ -67,12 +68,33 @@ class CadastroUsuarioForm(forms.ModelForm):
             user.save()
         return user
 
+class Radio1a7(forms.RadioSelect):
+    pass  # usar assim por enquanto; adicionar depois um template custom;        
+
 class AvaliacaoForm(forms.ModelForm):
     class Meta:
         model = Avaliacao
-        fields = ['nota', 'comentario', 'recomendacao']
+        fields = [
+            'c_a_sensibilizacao_reflexao',
+            'c_b_relacao_tema_microtemas',
+            'c_c_info_tecnicas',
+            'c_d_originalidade',
+            'c_e_apresentacao',
+            'comentario',
+            'decisao',
+        ]
         widgets = {
-            'nota': forms.NumberInput(attrs={'class': 'form-control'}),
-            'comentario': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
-            'recomendacao': forms.Select(attrs={'class': 'form-select'}),
+            'c_a_sensibilizacao_reflexao': Radio1a7(choices=NOTA_CHOICES),
+            'c_b_relacao_tema_microtemas': Radio1a7(choices=NOTA_CHOICES),
+            'c_c_info_tecnicas': Radio1a7(choices=NOTA_CHOICES),
+            'c_d_originalidade': Radio1a7(choices=NOTA_CHOICES),
+            'c_e_apresentacao': Radio1a7(choices=NOTA_CHOICES),
+            'comentario': forms.Textarea(attrs={'rows': 4}),
+        }
+        labels = {
+            'c_a_sensibilizacao_reflexao': 'a) Capacidade de sensibilização e reflexão (peso 5)',
+            'c_b_relacao_tema_microtemas': 'b) Relação da pauta com o tema e microtemas (peso 4)',
+            'c_c_info_tecnicas': 'c) Qualidade das informações técnicas (peso 3)',
+            'c_d_originalidade': 'd) Originalidade no desenvolvimento (peso 2)',
+            'c_e_apresentacao': 'e) Qualidade da apresentação (peso 1)',
         }

@@ -3,11 +3,96 @@
 {% block title %}Avaliar Trabalho{% endblock %}
 
 {% block content %}
-<h2 class="mb-4">Avaliar Trabalho: {{ trabalho.titulo }}</h2>
+<div class="d-flex align-items-center justify-content-between mb-3">
+    <div>
+        <h2 class="mb-1">Avaliar: {{ atribuicao.trabalho.titulo|default:"(Sem título)" }}</h2>
+        <div class="text-muted">
+            {{ atribuicao.get_tipo_juri_display }} • ID #{{ atribuicao.trabalho_id }}
+        </div>
+    </div>
+    <div>
+        <a class="btn btn-outline-secondary" href="{% url 'painel_avaliador_tipo' atribuicao.tipo_juri %}">
+            ← Voltar ao painel
+        </a>
+    </div>
+</div>
 
 <form method="post" class="p-4 border rounded bg-light">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-success mt-2">Salvar Avaliação</button>
+
+    <!-- Critérios 1..7 (pesos 5–1) -->
+    <div class="mb-3">
+        <label class="form-label"><strong>a)</strong> Capacidade de sensibilização e reflexão <span
+                class="text-muted">(peso 5)</span></label>
+        <div class="radio-1a7">
+            {{ form.c_a_sensibilizacao_reflexao }}
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label"><strong>b)</strong> Relação da pauta com o tema e microtemas <span
+                class="text-muted">(peso 4)</span></label>
+        <div class="radio-1a7">
+            {{ form.c_b_relacao_tema_microtemas }}
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label"><strong>c)</strong> Qualidade das informações técnicas <span class="text-muted">(peso
+                3)</span></label>
+        <div class="radio-1a7">
+            {{ form.c_c_info_tecnicas }}
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label"><strong>d)</strong> Originalidade no desenvolvimento <span class="text-muted">(peso
+                2)</span></label>
+        <div class="radio-1a7">
+            {{ form.c_d_originalidade }}
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label"><strong>e)</strong> Qualidade da apresentação <span class="text-muted">(peso
+                1)</span></label>
+        <div class="radio-1a7">
+            {{ form.c_e_apresentacao }}
+        </div>
+    </div>
+
+    <!-- Comentário e decisão -->
+    <div class="mb-3">
+        <label class="form-label">Comentário (opcional)</label>
+        {{ form.comentario }}
+    </div>
+
+    <div class="mb-4">
+        <label class="form-label">Decisão</label>
+        {{ form.decisao }}
+    </div>
+
+    <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-success">Salvar parecer</button>
+        <a class="btn btn-secondary" href="{% url 'painel_avaliador_tipo' atribuicao.tipo_juri %}">Cancelar</a>
+    </div>
 </form>
+
+<style>
+    /* Deixa os rádios 1..7 inline, com espaçamento e centralizados */
+    .radio-1a7 ul {
+        list-style: none;
+        padding-left: 0;
+        margin: 0;
+    }
+
+    .radio-1a7 li {
+        display: inline-block;
+        margin-right: .75rem;
+    }
+
+    .radio-1a7 input[type="radio"] {
+        margin-right: .25rem;
+    }
+</style>
 {% endblock %}

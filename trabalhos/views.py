@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
-from django.db.models import Q, Count
+from django.db.models import Q, Count, Avg, Sum, F
 from django.template.loader import get_template
 from django.utils.text import slugify
 from django.conf import settings
@@ -12,15 +12,20 @@ from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
 from django.core.mail import send_mail
 
-from .models import Trabalho, Avaliacao
+# MODELOS E FORMS (NOVO ESQUEMA)
+from .models import Trabalho, Avaliacao, Atribuicao
 from .forms import CadastroUsuarioForm, TrabalhoForm, AvaliacaoForm
+
+# Utilitário opcional que você já usa
 from meu_projeto.utils import salvar_arquivo
 
 import io
 from xhtml2pdf import pisa
 
 
-# --- Views públicas e utilitárias ---
+# ==============================
+#  Views públicas e utilitárias
+# ==============================
 
 def home(request):
     return render(request, 'trabalhos/home.html')
@@ -36,21 +41,28 @@ def fazer_logout(request):
     return redirect('home')
 
 
-# --- Autenticação ---
+# ===============
+#  Autenticação
+# ===============
 
 def login_usuario(request):
+    """
+    Redireciona:
+      - superuser → painel_admin
+      - avaliador → painel_avaliador (tipo padrão: categoria)
+    """
     if request.method == 'POST':
-        email = request.POST['email']
-        senha = request.POST['senha']
+        email = request.POST.get('email')
+        senha = request.POST.get('senha')
         user = authenticate(request, username=email, password=senha)
         if user:
             login(request, user)
             if user.is_superuser:
                 return redirect('painel_admin')
-            elif user.tipo == 'autor':
-                return redirect('enviar_trabalho')
-            elif user.tipo == 'avaliador':
-                return redirect('avaliar_trabalhos')
+            elif getattr(user, 'tipo', None) == 'avaliador':
+                return redirect('painel_avaliador')
+            # fallback
+            return redirect('home')
         messages.error(request, 'Email ou senha inválidos')
     return render(request, 'trabalhos/login.html')
 
@@ -70,7 +82,9 @@ def cadastro_usuario(request):
     return render(request, 'trabalhos/cadastro.html', {'form': form})
 
 
-# --- Submissão e avaliação ---
+# ==========================
+#  Submissão de trabalhos
+# ==========================
 
 def enviar_trabalho(request):
     if request.method == 'POST':
@@ -78,20 +92,18 @@ def enviar_trabalho(request):
         if form.is_valid():
             try:
                 trabalho = form.save(commit=False)
-                trabalho.status = 'pendente'  # força o valor padrão
+                trabalho.status = 'pendente'  # força valor padrão
                 trabalho.save()
 
-                # Enviar e-mail de confirmação
-
+                # E-mail de confirmação (opcional)
                 if trabalho.email:
                     send_mail(
                         subject='Inscrição Confirmada - Prêmio SEMA-FEPAM de Jornalismo Ambiental 2025',
                         message=(
-                            f'Recebemos sua inscrição com sucesso no Prêmio SEMA-FEPAM de Jornalismo Ambiental 2025.\n\n'
-                            'Atenciosamente,\n'
-                            'Comissão Organizadora\n'
+                            'Recebemos sua inscrição com sucesso no Prêmio SEMA-FEPAM de Jornalismo Ambiental 2025.\n\n'
+                            'Atenciosamente,\nComissão Organizadora\n'
                         ),
-                        from_email=None,  # Usa DEFAULT_FROM_EMAIL do settings.py
+                        from_email=None,  # usa DEFAULT_FROM_EMAIL
                         recipient_list=[trabalho.email],
                         fail_silently=False,
                     )
@@ -105,91 +117,149 @@ def enviar_trabalho(request):
             messages.error(request, "Formulário inválido.")
     else:
         form = TrabalhoForm()
-    
+
     return render(request, 'trabalhos/enviar_trabalho.html', {'form': form})
 
 
+# ==========================
+#  Área do Avaliador (NOVO)
+# ==========================
+
 @login_required
-def avaliar_trabalhos(request):
-    trabalhos = Trabalho.objects.filter(status='aceito')
-    avaliacoes_ids = Avaliacao.objects.filter(avaliador=request.user).values_list('trabalho_id', flat=True)
+def painel_avaliador(request, tipo='categoria'):
+    """
+    Lista de TRABALHOS atribuídos ao avaliador logado para um tipo de júri.
+    Trabalhamos sobre Atribuição (não mais Trabalho direto).
+    """
+    atribuicoes = (Atribuicao.objects
+                   .select_related('trabalho')
+                   .filter(avaliador=request.user, tipo_juri=tipo)
+                   .order_by('-criado_em'))
     return render(request, 'trabalhos/avaliar_trabalhos.html', {
-        'trabalhos': trabalhos,
-        'avaliacoes_ids': avaliacoes_ids,
+        'atribuicoes': atribuicoes,
+        'tipo': tipo,
     })
 
 
 @login_required
-def avaliar_trabalho(request, trabalho_id):
-    trabalho = get_object_or_404(Trabalho, id=trabalho_id)
+def avaliar_trabalho(request, atribuicao_id):
+    """
+    Preenchimento/edição do parecer objetivo (1..7) para uma ATRIBUIÇÃO.
+    Garante que o avaliador só acesse o que foi atribuído para ele.
+    """
+    atribuicao = get_object_or_404(Atribuicao, id=atribuicao_id, avaliador=request.user)
+    instance = getattr(atribuicao, 'avaliacao', None)
+
     if request.method == 'POST':
-        form = AvaliacaoForm(request.POST)
+        form = AvaliacaoForm(request.POST, instance=instance)
         if form.is_valid():
             avaliacao = form.save(commit=False)
-            avaliacao.trabalho = trabalho
-            avaliacao.avaliador = request.user
+            avaliacao.atribuicao = atribuicao
             avaliacao.save()
-            gerar_parecer_final(trabalho)
-            return redirect('avaliar_trabalhos')
+            messages.success(request, 'Parecer salvo com sucesso.')
+            return redirect('painel_avaliador_tipo', tipo=atribuicao.tipo_juri)
     else:
-        form = AvaliacaoForm()
-    return render(request, 'trabalhos/avaliar_formulario.html', {'form': form, 'trabalho': trabalho})
+        form = AvaliacaoForm(instance=instance)
+
+    return render(request, 'trabalhos/avaliar_formulario.html', {
+        'form': form,
+        'atribuicao': atribuicao,
+    })
 
 
-def gerar_parecer_final(trabalho):
-    avaliacoes = Avaliacao.objects.filter(trabalho=trabalho)
-    if avaliacoes.exists():
-        counts = avaliacoes.values_list('recomendacao', flat=True)
-        trabalho.parecer_final = (
-            'Aceito' if list(counts).count('aceitar') > max(list(counts).count('rejeitar'), list(counts).count('revisar'))
-            else 'Rejeitado' if list(counts).count('rejeitar') > list(counts).count('revisar')
-            else 'Revisão necessária'
-        )
-        trabalho.save()
+# ==================================================
+#  Painel da Comissão — Ranking por tipo de júri
+# ==================================================
+
+@staff_member_required
+def painel_comissao_ranking(request, tipo='categoria'):
+    """
+    Ranking por TRABALHO dentro de um tipo de júri, usando média ponderada (pesos 5,4,3,2,1).
+    """
+    qs = (Avaliacao.objects
+          .filter(atribuicao__tipo_juri=tipo)
+          .annotate(
+              t_id=F('atribuicao__trabalho'),
+              pontos=(F('c_a_sensibilizacao_reflexao') * 5 +
+                      F('c_b_relacao_tema_microtemas') * 4 +
+                      F('c_c_info_tecnicas') * 3 +
+                      F('c_d_originalidade') * 2 +
+                      F('c_e_apresentacao') * 1)
+          )
+          .values('t_id')
+          .annotate(
+              pontos_totais=Sum('pontos'),
+              n_pareceres=Count('id'),
+              media_ponderada=Avg(
+                  (F('c_a_sensibilizacao_reflexao') * 5 +
+                   F('c_b_relacao_tema_microtemas') * 4 +
+                   F('c_c_info_tecnicas') * 3 +
+                   F('c_d_originalidade') * 2 +
+                   F('c_e_apresentacao') * 1) / 15.0
+              ),
+          )
+          .order_by('-media_ponderada', '-pontos_totais'))
+
+    return render(request, 'trabalhos/painel_comissao_ranking.html', {
+        'tipo': tipo,
+        'ranking': list(qs),
+    })
 
 
-# --- Painel administrativo ---
+# ==========================
+#  Painel administrativo
+# ==========================
 
 @staff_member_required
 def painel_admin(request):
+    """
+    Painel simples para a organização filtrar/consultar trabalhos.
+    (Removido qualquer acoplamento à recomendação antiga.)
+    """
     trabalhos = Trabalho.objects.all()
     status = request.GET.get('status')
-    parecer = request.GET.get('parecer')
     busca = request.GET.get('busca')
 
     if status == 'submetido':
-        trabalhos = trabalhos.annotate(num_avaliacoes=Count('avaliacao')).filter(num_avaliacoes=0)
-    elif status == 'avaliado':
-        trabalhos = trabalhos.annotate(num_avaliacoes=Count('avaliacao')).filter(num_avaliacoes__gt=0)
-
-    if parecer:
-        trabalhos = trabalhos.filter(avaliacao__recomendacao=parecer).distinct()
+        # sem nenhuma avaliação ainda (conta por Atribuições/Avaliações)
+        trabalhos = trabalhos.annotate(num_atribs=Count('atribuicoes')).filter(num_atribs=0)
+    elif status == 'atribuido':
+        trabalhos = trabalhos.annotate(num_atribs=Count('atribuicoes')).filter(num_atribs__gt=0)
 
     if busca and busca.strip():
         trabalhos = trabalhos.filter(
-            Q(titulo__icontains=busca) | Q(nome_completo__icontains=busca)
+            Q(titulo__icontains=busca) | Q(nome_completo__icontains=busca) | Q(email__icontains=busca)
         )
 
     return render(request, 'trabalhos/painel_admin.html', {
         'trabalhos': trabalhos,
         'status_atual': status or '',
-        'parecer_atual': parecer or '',
         'busca_atual': busca or '',
     })
 
 
+# ==========================
+#  PDF de parecer (opcional)
+# ==========================
+
 @staff_member_required
 def gerar_parecer_pdf(request, trabalho_id):
+    """
+    Gera um PDF com dados do trabalho + médias (se quiser, dá para expandir com
+    as avaliações detalhadas).
+    """
     trabalho = get_object_or_404(Trabalho, id=trabalho_id)
     template = get_template('trabalhos/parecer_pdf.html')
     html = template.render({'trabalho': trabalho})
     response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename="parecer_{slugify(trabalho.titulo)}.pdf"'
+    response['Content-Disposition'] = f'attachment; filename="parecer_{slugify(trabalho.titulo or trabalho.id)}.pdf"'
     pisa_status = pisa.CreatePDF(io.BytesIO(html.encode('utf-8')), dest=response)
     return response if not pisa_status.err else HttpResponse('Erro ao gerar o PDF', status=500)
 
 
-# --- Testes e diagnóstico ---
+# ==========================
+#  Testes e diagnóstico
+# ==========================
 
 @staff_member_required
 def teste_upload(request):
@@ -207,6 +277,3 @@ def checar_storage(request):
     tipo = type(default_storage).__name__
     caminho = settings.DEFAULT_FILE_STORAGE
     return HttpResponse(f"Storage em uso: {tipo}<br>DEFAULT_FILE_STORAGE: {caminho}")
-
-
-

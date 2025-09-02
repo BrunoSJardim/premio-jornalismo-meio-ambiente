@@ -3,40 +3,65 @@
 {% block title %}Avaliar Trabalhos{% endblock %}
 
 {% block content %}
-<h2 class="mb-4">Lista de Trabalhos para Avaliação</h2>
+<div class="d-flex align-items-center justify-content-between mb-3">
+    <h2 class="mb-0">Meus trabalhos atribuídos — {{ tipo|title }}</h2>
+    <div class="btn-group">
+        <a class="btn btn-outline-primary {% if tipo == 'categoria' %}active{% endif %}"
+            href="{% url 'painel_avaliador_tipo' 'categoria' %}">Categorias</a>
+        <a class="btn btn-outline-primary {% if tipo == 'microtema' %}active{% endif %}"
+            href="{% url 'painel_avaliador_tipo' 'microtema' %}">Microtemas</a>
+    </div>
+</div>
 
-<table class="table table-striped">
-    <thead>
+<table class="table table-striped align-middle">
+    <thead class="table-light">
         <tr>
-            <th>Título</th>
-            <th>Autores</th>
-            <th>Status</th>
-            <th>Ações</th>
-            <th>Parecer Final</th>
+            <th style="width:46%">Título</th>
+            <th style="width:24%">Situação</th>
+            <th style="width:30%">Ação</th>
         </tr>
     </thead>
     <tbody>
-        {% for trabalho in trabalhos %}
+        {% for a in atribuicoes %}
         <tr>
-            <td>{{ trabalho.titulo }}</td>
-            <td>{{ trabalho.autores }}</td>
-            <td>{{ trabalho.status }}</td>
             <td>
-                {% if trabalho.id in avaliacoes_ids %}
-                <span class="badge bg-success">Já Avaliado</span>
+                <div class="fw-semibold">{{ a.trabalho.titulo|default:"(Sem título)" }}</div>
+                <div class="text-muted small">
+                    {{ a.get_tipo_juri_display }} • ID #{{ a.trabalho_id }}
+                </div>
+            </td>
+
+            <td>
+                {% if a.avaliacao %}
+                <span class="badge bg-success me-2">Avaliado</span>
+                <div>Média ponderada: <strong>{{ a.avaliacao.media_ponderada }}</strong></div>
+                <div>Decisão: {{ a.avaliacao.get_decisao_display }}</div>
                 {% else %}
-                <a href="{% url 'avaliar_trabalho' trabalho.id %}" class="btn btn-primary btn-sm">Avaliar</a>
+                <span class="badge bg-secondary">Pendente</span>
                 {% endif %}
             </td>
+
             <td>
-                {% if trabalho.parecer_final %}
-                {{ trabalho.parecer_final }}
-                {% else %}
-                <span class="text-muted">Pendente</span>
-                {% endif %}
+                <a class="btn btn-primary btn-sm" href="{% url 'avaliar_trabalho' a.id %}">
+                    {% if a.avaliacao %}Editar parecer{% else %}Avaliar{% endif %}
+                </a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="3" class="text-center text-muted py-4">
+                Nenhum trabalho atribuído para este tipo de júri.
             </td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
+
+<style>
+    /* Estéticos leves, pode remover se preferir usar só Bootstrap */
+    .table td,
+    .table th {
+        vertical-align: middle;
+    }
+</style>
 {% endblock %}
