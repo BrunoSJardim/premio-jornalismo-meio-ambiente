@@ -17,6 +17,36 @@
     </div>
 </div>
 
+<!-- Ficha do trabalho -->
+<div class="card mb-4">
+    <div class="card-header">Ficha do trabalho</div>
+    <div class="card-body">
+        <div class="mb-2"><strong>Título:</strong> {{ atribuicao.trabalho.titulo|default:"(Sem título)" }}</div>
+        <div class="mb-2">
+            <strong>Descrição:</strong><br>
+            {{ atribuicao.trabalho.descricao|linebreaksbr|default:"(Sem descrição)" }}
+        </div>
+        <div class="mb-2">
+            <strong>Link do trabalho:</strong>
+            {% if atribuicao.trabalho.link_trabalho %}
+            <a href="{{ atribuicao.trabalho.link_trabalho }}" target="_blank" rel="noopener">
+                {{ atribuicao.trabalho.link_trabalho }}
+            </a>
+            {% else %}
+            <span class="text-muted">(não informado)</span>
+            {% endif %}
+        </div>
+        <div>
+            <strong>Arquivo do trabalho:</strong>
+            {% if atribuicao.trabalho.arquivo_trabalho %}
+            <a href="{{ atribuicao.trabalho.arquivo_trabalho.url }}" target="_blank" rel="noopener">Abrir arquivo</a>
+            {% else %}
+            <span class="text-muted">(não enviado)</span>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
 <form method="post" class="p-4 border rounded bg-light">
     {% csrf_token %}
 
