@@ -61,7 +61,7 @@ def login_usuario(request):
         if user:
             login(request, user)
             if user.is_superuser:
-                return redirect('painel_admin')
+                return redirect('home')
             elif getattr(user, 'tipo', None) == 'avaliador':
                 return redirect('painel_avaliador')
             # fallback
