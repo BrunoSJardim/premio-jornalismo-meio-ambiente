@@ -6,18 +6,18 @@
 <div class="container mt-4 mb-5">
     <h2 class="mb-4">Painel Administrativo - Pareceres Finais</h2>
 
-    <!-- FORMULÁRIO DE FILTROS -->
+   <!-- FORMULÁRIO DE FILTROS -->
 
-    <form method="get" class="row g-3 mb-4">
+    <form method="get" class="row g-3 mb-4"> 
 
-        <!-- Campo de busca (título ou nome completo) -->
+      <!--  Campo de busca (título ou nome completo) -->
 
         <div class="col-md-4">
             <input type="text" name="busca" class="form-control" placeholder="Buscar título ou nome completo"
                 value="{{ busca_atual }}">
         </div>
 
-        <!-- Filtro de Status -->
+       <!-- Filtro de Status -->
 
         <div class="col-md-3">
             <select name="status" class="form-select">
@@ -31,7 +31,7 @@
             </select>
         </div>
 
-        <!-- Filtro de Parecer Final -->
+      <!--  Filtro de Parecer Final -->
 
         <div class="col-md-3">
             <select name="parecer" class="form-select">
@@ -44,14 +44,14 @@
             </select>
         </div>
 
-        <!-- Botão Filtrar -->
+      <!--  Botão Filtrar -->
 
         <div class="col-md-2">
             <button type="submit" class="btn btn-success w-100">Filtrar</button>
         </div>
     </form>
 
-    <!-- TABELA DE RESULTADOS -->
+  <!-- TABELA DE RESULTADOS -->
 
     <table class="table table-bordered">
         <thead class="table-dark">
@@ -70,7 +70,7 @@
                 <td>{{ trabalho.nome_completo }}</td>
                 <td>{{ trabalho.categoria|title }}</td>
 
-                <!-- Coluna “Parecer Final” corrigida: usa “first” em vez de loop + break -->
+               <!--  Coluna “Parecer Final” corrigida: usa “first” em vez de loop + break -->
 
                 <td>
                     {% with primeira_avaliacao=trabalho.avaliacao.all|first %}
@@ -82,7 +82,7 @@
                     {% endwith %}
                 </td>
 
-                <!-- Coluna “Arquivo” (botão para baixar parecer) -->
+              <!--  Coluna “Arquivo” (botão para baixar parecer) -->
 
                 <td>
                     {% if trabalho.avaliacao.exists %}
