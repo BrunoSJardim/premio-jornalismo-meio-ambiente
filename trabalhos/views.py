@@ -209,47 +209,9 @@ def painel_comissao_ranking(request, tipo='categoria'):
           )
           .order_by('-media_ponderada', '-pontos_totais'))
 
-    # =============================
-    # FILTRO POR CATEGORIA/MICROTEMA
-    # =============================
-
-    filtro = request.GET.get('filtro')
-    if filtro:
-        if tipo == 'categoria':
-            qs = qs.filter(t_id__categoria=filtro)
-        elif tipo == 'microtema':
-            qs = qs.filter(t_id__microtema=filtro)
-
-    # =============================
-    # LISTAS FIXAS DE OPÇÕES
-    # =============================
-
-    categorias = [
-        "Jornalismo impresso",
-        "Webjornalismo",
-        "Fotojornalismo",
-        "Radiojornalismo",
-        "Telejornalismo",
-        "Jornalismo universitário",
-    ]
-    microtemas = [
-        "Meio ambiente e desenvolvimento sustentável em sala de aula",
-        "União de todos para o enfrentamento das mudanças climáticas",
-        "Mitigação no campo e as boas práticas já implementadas",
-        "Uso consciente dos recursos hídricos no enfrentamento da estiagem",
-        "Energias limpas e renováveis para o desenvolvimento sustentável",
-        "Ações de resiliência para um RS mais forte",
-        "Soluções baseadas na natureza para promover a qualidade de vida da população",
-        "Recursos naturais do RS como potencial para o desenvolvimento econômico sustentável",
-        "Nova vida: como estão os animais resgatados da enchente",
-    ]
-
     return render(request, 'trabalhos/painel_comissao_ranking.html', {
         'tipo': tipo,
         'ranking': list(qs),
-        'filtro': filtro or '',
-        'categorias': categorias,
-        'microtemas': microtemas,
     })
 
 

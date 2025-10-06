@@ -1,87 +1,43 @@
-{% extends 'base.html' %}
-{% load static %}
+{% extends "trabalhos/base.html" %}
+{% block title %}Ranking — {{ tipo|title }}{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-  <h2 class="mb-4">
-    Ranking — {{ tipo|title }}
-  </h2>
+<div class="d-flex align-items-center justify-content-between mb-3">
+    <h2 class="mb-0">Ranking — {{ tipo|title }}</h2>
+    <div class="btn-group">
+        <a class="btn btn-outline-primary {% if tipo == 'categoria' %}active{% endif %}"
+            href="{% url 'painel_comissao_ranking' %}">Categorias</a>
+        <a class="btn btn-outline-primary {% if tipo == 'microtema' %}active{% endif %}"
+            href="{% url 'painel_comissao_ranking_tipo' 'microtema' %}">Microtemas</a>
+    </div>
+</div>
 
-  <!-- Botões de alternância entre categorias e microtemas -->
-  <div class="mb-4">
-    <a href="?tipo=categoria" class="btn {% if tipo == 'categoria' %}btn-primary{% else %}btn-outline-primary{% endif %}">Categorias</a>
-    <a href="?tipo=microtema" class="btn {% if tipo == 'microtema' %}btn-primary{% else %}btn-outline-primary{% endif %}">Microtemas</a>
-  </div>
-
-  <!-- Filtro dinâmico -->
-
-<form method="get" class="row g-3 align-items-center mb-4">
-  <input type="hidden" name="tipo" value="{{ tipo }}">
-  <div class="col-auto">
-    <label for="filtro" class="col-form-label fw-bold">
-      Filtrar por {{ tipo|title }}:
-    </label>
-  </div>
-
-  <div class="col-auto">
-    <select name="filtro" id="filtro" class="form-select" onchange="this.form.submit()">
-      <option value="">Todos</option>
-
-      {% if tipo == 'categoria' %}
-        {% for c in categorias %}
-          {% ifequal filtro c %}
-            <option value="{{ c|escape }}" selected>{{ c }}</option>
-          {% else %}
-            <option value="{{ c|escape }}">{{ c }}</option>
-          {% endifequal %}
-        {% endfor %}
-
-      {% elif tipo == 'microtema' %}
-        {% for m in microtemas %}
-          {% ifequal filtro m %}
-            <option value="{{ m|escape }}" selected>{{ m }}</option>
-          {% else %}
-            <option value="{{ m|escape }}">{{ m }}</option>
-          {% endifequal %}
-        {% endfor %}
-      {% endif %}
-
-    </select>
-  </div>
-</form>
-
-  <!-- Tabela de ranking -->
-  <div class="table-responsive">
-    <table class="table table-striped table-hover align-middle">
-      <thead class="table-light">
+<table class="table table-bordered align-middle">
+    <thead class="table-light">
         <tr>
-          <th>Posição</th>
-          <th>Trabalho</th>
-          <th>Média Ponderada</th>
-          <th>Pontos Totais</th>
-          <th>Pareceres</th>
+            <th style="width:55%">Trabalho</th>
+            <th style="width:15%">Média ponderada</th>
+            <th style="width:15%">Pontos totais</th>
+            <th style="width:15%">Pareceres</th>
         </tr>
-      </thead>
-      <tbody>
-        {% if ranking %}
-          {% for r in ranking %}
-          <tr>
-            <td>{{ forloop.counter }}</td>
+    </thead>
+    <tbody>
+        {% for r in ranking %}
+        <tr>
             <td>{{ r.t_id }}</td>
             <td><strong>{{ r.media_ponderada|floatformat:2 }}</strong></td>
             <td>{{ r.pontos_totais }}</td>
             <td>{{ r.n_pareceres }}</td>
-          </tr>
-          {% endfor %}
-        {% else %}
-          <tr>
-            <td colspan="5" class="text-center text-muted">
-              Nenhum trabalho encontrado para este filtro.
-            </td>
-          </tr>
-        {% endif %}
-      </tbody>
-    </table>
-  </div>
-</div>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4" class="text-center text-muted py-4">Sem avaliações ainda.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<p class="text-muted small mt-3">
+    Ordem: média ponderada (desc) • desempate por pontos totais (desc).
+</p>
 {% endblock %}
