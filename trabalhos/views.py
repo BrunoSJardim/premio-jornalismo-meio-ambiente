@@ -92,7 +92,7 @@ def cadastro_usuario(request):
 def enviar_trabalho(request):
 
     # controle simples (troque True/False quando quiser abrir/fechar)
-    INSCRICOES_ABERTAS = False
+    INSCRICOES_ABERTAS = True
     if not INSCRICOES_ABERTAS:
         return render(request, "trabalhos/inscricoes_encerradas.html")
 
